@@ -119,14 +119,17 @@ function FullScreenAd({ onDone }) {
   const [countdown, setCountdown] = useState(8);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown(c => {
-        if (c <= 1) { clearInterval(timer); onDone(); return 0; }
-        return c - 1;
-      });
+    if (countdown <= 0) {
+      onDone();
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      setCountdown(c => c - 1);
     }, 1000);
-    return () => clearInterval(timer);
-  }, [onDone]);
+
+    return () => clearTimeout(timer);
+  }, [countdown, onDone]);
 
   return (
     <div style={{
